@@ -1,8 +1,7 @@
 package ru.gorbunov.diaries.converters;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import ru.gorbunov.diaries.controller.dto.UserDto;
 import ru.gorbunov.diaries.domain.User;
 
@@ -13,7 +12,7 @@ import java.util.Random;
  *
  * @author Gorbunov.ia
  */
-public class UserToUserDtoConverterTest {
+class UserToUserDtoConverterTest {
 
     /**
      * Error message.
@@ -29,39 +28,39 @@ public class UserToUserDtoConverterTest {
      * Test convert empty User object.
      */
     @Test
-    public void testConvertEmptyObject() {
+    void testConvertEmptyObject() {
         UserDto userDto = converter.convert(new User());
-        Assert.assertNotNull("UserDto object is null, but User not null.", userDto);
+        Assertions.assertThat(userDto).as("UserDto object is null, but User not null.").isNotNull();
     }
 
     /**
      * Test convert User object with filled field.
      */
     @Test
-    public void testConvertFullObject() {
+    void testConvertFullObject() {
         final Integer userId = new Random().nextInt();
         final User user = getTestUser(userId);
         final UserDto userDto = converter.convert(user);
 
-        Assert.assertEquals(CONVERT_ERR_MSG, userId, userDto.getId());
-        Assert.assertEquals(CONVERT_ERR_MSG, "unitTest", userDto.getLogin());
-        Assert.assertEquals(CONVERT_ERR_MSG, "unit@test", userDto.getEmail());
-        Assert.assertEquals(CONVERT_ERR_MSG, true, userDto.getActive());
+        Assertions.assertThat(userDto.getId()).as(CONVERT_ERR_MSG).isEqualTo(userId);
+        Assertions.assertThat(userDto.getLogin()).as(CONVERT_ERR_MSG).isEqualTo("unitTest");
+        Assertions.assertThat(userDto.getEmail()).as(CONVERT_ERR_MSG).isEqualTo("unit@test");
+        Assertions.assertThat(userDto.getActive()).as(CONVERT_ERR_MSG).isTrue();
     }
 
     /**
      * Test convert null User object.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConvertNullSource() {
-       converter.convert(null);
+    @Test
+    void testConvertNullSource() {
+        Assertions.assertThatIllegalArgumentException().isThrownBy(() -> converter.convert(null));
     }
 
     /**
      * Help method for creating test user object.
      *
-     * @param userId    user id
-     * @return          user object
+     * @param userId user id
+     * @return user object
      */
     private User getTestUser(final Integer userId) {
         User user = new User();

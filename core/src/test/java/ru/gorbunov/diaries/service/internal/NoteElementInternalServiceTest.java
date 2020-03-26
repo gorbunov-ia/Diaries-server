@@ -1,16 +1,13 @@
 package ru.gorbunov.diaries.service.internal;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-
 import ru.gorbunov.diaries.controller.dto.NoteElementDto;
 import ru.gorbunov.diaries.controller.vm.SortElementVm;
 import ru.gorbunov.diaries.domain.Movable;
@@ -32,7 +29,7 @@ import java.util.Optional;
  *
  * @author Gorbunov.ia
  */
-public class NoteElementInternalServiceTest {
+class NoteElementInternalServiceTest {
 
     /**
      * Const.
@@ -86,8 +83,8 @@ public class NoteElementInternalServiceTest {
     /**
      * Standard junit initialize method.
      */
-    @Before
-    public void init() {
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.initMocks(this);
         service = new NoteElementInternalServiceImpl(noteElementRepository, noteElementSpecification,
                 userInternalService, noteInternalService);
@@ -97,7 +94,7 @@ public class NoteElementInternalServiceTest {
      * Test when user without authorization.
      */
     @Test
-    public void testWithoutUserChangeSortBy() {
+    void testWithoutUserChangeSortBy() {
         //mockUser();
         mockNoteElementFindOne(getNoteElementForTest());
         Assertions.assertThatThrownBy(() -> service.changeSortBy(NOTE_ELEMENT_ID, NEW_SORT_BY))
@@ -108,7 +105,7 @@ public class NoteElementInternalServiceTest {
      * Test when note element id is not found in db.
      */
     @Test
-    public void testNotFoundNoteElementChangeSortBy() {
+    void testNotFoundNoteElementChangeSortBy() {
         mockUser();
         Assertions.assertThatThrownBy(() -> service.changeSortBy(NOTE_ELEMENT_ID, NEW_SORT_BY))
                 .isInstanceOf(SwapElementException.class);
@@ -117,24 +114,26 @@ public class NoteElementInternalServiceTest {
     /**
      * Test when note element is null.
      */
-    @Test(expected = NullPointerException.class)
-    public void testEmptyNoteElementChangeSortBy() {
-        service.changeSortBy(null, NEW_SORT_BY);
+    @Test
+    void testEmptyNoteElementChangeSortBy() {
+        Assertions.assertThatNullPointerException()
+                .isThrownBy(() -> service.changeSortBy(null, NEW_SORT_BY));
     }
 
     /**
      * Test when new sort by is null.
      */
-    @Test(expected = NullPointerException.class)
-    public void testEmptySortByChangeSortBy() {
-        service.changeSortBy(NOTE_ELEMENT_ID, null);
+    @Test
+    void testEmptySortByChangeSortBy() {
+        Assertions.assertThatNullPointerException()
+                .isThrownBy(() -> service.changeSortBy(NOTE_ELEMENT_ID, null));
     }
 
     /**
      * Test when note element with new sort by not found in db.
      */
     @Test
-    public void testNotFoundNewSortByChangeSortBy() {
+    void testNotFoundNewSortByChangeSortBy() {
         mockUser();
 
         NoteElement noteElement = getNoteElementForTest();
@@ -142,14 +141,14 @@ public class NoteElementInternalServiceTest {
 
         Assertions.assertThatThrownBy(() -> service.changeSortBy(NOTE_ELEMENT_ID, NEW_SORT_BY))
                 .isInstanceOf(SwapElementException.class);
-        Assert.assertEquals(noteElement.getSortBy(), OLD_SORT_BY);
+        Assertions.assertThat(noteElement.getSortBy()).isEqualTo(OLD_SORT_BY);
     }
 
     /**
      * Test when new sort by is previous note element.
      */
     @Test
-    public void testPrevSortByChangeSortBy() {
+    void testPrevSortByChangeSortBy() {
         mockUser();
 
         NoteElement noteElement = getNoteElementForTest();
@@ -161,20 +160,20 @@ public class NoteElementInternalServiceTest {
 
         Collection<NoteElement> result = service.changeSortBy(NOTE_ELEMENT_ID, NEW_SORT_BY);
 
-        Assert.assertFalse(result.isEmpty());
-        Assert.assertEquals(noteElement.getSortBy(), NEW_SORT_BY);
+        Assertions.assertThat(result.isEmpty()).isFalse();
+        Assertions.assertThat(noteElement.getSortBy()).isEqualTo(NEW_SORT_BY);
 
         final NoteElement noteElementAfterSwap = findNoteElementByIdFromCollection(result, noteElement.getId());
-        Assert.assertEquals(noteElementAfterSwap.getSortBy(), NEW_SORT_BY);
-        Assert.assertEquals(noteElement, noteElementAfterSwap);
-        Assert.assertEquals(previous.getSortBy(), OLD_SORT_BY);
+        Assertions.assertThat(noteElementAfterSwap.getSortBy()).isEqualTo(NEW_SORT_BY);
+        Assertions.assertThat(noteElement).isEqualTo(noteElementAfterSwap);
+        Assertions.assertThat(previous.getSortBy()).isEqualTo(OLD_SORT_BY);
     }
 
     /**
      * Test with shift to next note elements.
      */
     @Test
-    public void testNextShiftChangeSortBy() {
+    void testNextShiftChangeSortBy() {
         mockUser();
 
         NoteElement noteElement = getNoteElementForTest();
@@ -191,32 +190,32 @@ public class NoteElementInternalServiceTest {
 
         Collection<NoteElement> result = service.changeSortBy(NOTE_ELEMENT_ID, NEW_NEXT_SORT_BY);
 
-        Assert.assertFalse(result.isEmpty());
-        Assert.assertEquals(noteElement.getSortBy(), NEW_NEXT_SORT_BY);
+        Assertions.assertThat(result.isEmpty()).isFalse();
+        Assertions.assertThat(noteElement.getSortBy()).isEqualTo(NEW_NEXT_SORT_BY);
 
         final NoteElement noteElementAfterSwap = findNoteElementByIdFromCollection(result, noteElement.getId());
-        Assert.assertEquals(noteElementAfterSwap.getSortBy(), NEW_NEXT_SORT_BY);
-        Assert.assertEquals(noteElement, noteElementAfterSwap);
+        Assertions.assertThat(noteElementAfterSwap.getSortBy()).isEqualTo(NEW_NEXT_SORT_BY);
+        Assertions.assertThat(noteElement).isEqualTo(noteElementAfterSwap);
 
-        Assert.assertEquals(middle.getSortBy(), OLD_NEXT_SORT_BY);
-        Assert.assertEquals(middle, findNoteElementByIdFromCollection(result, middle.getId()));
+        Assertions.assertThat(middle.getSortBy()).isEqualTo(OLD_NEXT_SORT_BY);
+        Assertions.assertThat(middle).isEqualTo(findNoteElementByIdFromCollection(result, middle.getId()));
 
-        Assert.assertEquals(next.getSortBy(), MIDDLE_NEXT_SORT_BY);
-        Assert.assertEquals(next, findNoteElementByIdFromCollection(result, next.getId()));
+        Assertions.assertThat(next.getSortBy()).isEqualTo(MIDDLE_NEXT_SORT_BY);
+        Assertions.assertThat(next).isEqualTo(findNoteElementByIdFromCollection(result, next.getId()));
     }
 
     /**
      * Method help to find element by id from collection.
      *
      * @param noteElements collections for search
-     * @param id note element id for search
+     * @param id           note element id for search
      * @return NoteElement not null
      */
     private NoteElement findNoteElementByIdFromCollection(Collection<NoteElement> noteElements, Integer id) {
         Optional<NoteElement> result = noteElements.stream()
                 .filter(element -> element.getId().equals(id))
                 .findFirst();
-        Assert.assertTrue(result.isPresent());
+        Assertions.assertThat(result.isPresent()).isTrue();
         return result.get();
     }
 
@@ -266,7 +265,7 @@ public class NoteElementInternalServiceTest {
      * Check fill sort element to empty list of movables.
      */
     @Test
-    public void testEmptyFillSortElement() {
+    void testEmptyFillSortElement() {
         //no exception
         service.fillSortElement(Collections.emptyList());
     }
@@ -275,7 +274,7 @@ public class NoteElementInternalServiceTest {
      * Check fill sort element to list of one movable.
      */
     @Test
-    public void testOneElementFillSortElement() {
+    void testOneElementFillSortElement() {
         final int initialSortBy = 10;
         final Movable movable = createMovableWithSortBy(initialSortBy);
 
@@ -288,7 +287,7 @@ public class NoteElementInternalServiceTest {
      * Check fill sort element to full list of movable.
      */
     @Test
-    public void testFullFillSortElement() {
+    void testFullFillSortElement() {
         final int firstSortBy = 50;
         final Movable firstMovable = createMovableWithSortBy(firstSortBy);
         final int secondSortBy = 40;
@@ -322,18 +321,17 @@ public class NoteElementInternalServiceTest {
      * Method to check sort element.
      *
      * @param sortElementVm target to check
-     * @param first first value of target
-     * @param prev prev value of target
-     * @param next next value of target
-     * @param last last value of target
+     * @param first         first value of target
+     * @param prev          prev value of target
+     * @param next          next value of target
+     * @param last          last value of target
      */
     private void checkSortElementVm(SortElementVm sortElementVm, int first, int prev, int next, int last) {
-        Assert.assertNotNull(sortElementVm);
-        Assert.assertEquals(sortElementVm.getFirst().intValue(), first);
-        Assert.assertEquals(sortElementVm.getPrev().intValue(), prev);
-        Assert.assertEquals(sortElementVm.getNext().intValue(), next);
-        Assert.assertEquals(sortElementVm.getLast().intValue(), last);
-
+        Assertions.assertThat(sortElementVm).isNotNull();
+        Assertions.assertThat(sortElementVm.getFirst().intValue()).isEqualTo(first);
+        Assertions.assertThat(sortElementVm.getPrev().intValue()).isEqualTo(prev);
+        Assertions.assertThat(sortElementVm.getNext().intValue()).isEqualTo(next);
+        Assertions.assertThat(sortElementVm.getLast().intValue()).isEqualTo(last);
     }
 
 }

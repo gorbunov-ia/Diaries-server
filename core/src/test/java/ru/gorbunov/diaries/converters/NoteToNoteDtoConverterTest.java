@@ -1,8 +1,7 @@
 package ru.gorbunov.diaries.converters;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import ru.gorbunov.diaries.controller.dto.NoteDto;
 import ru.gorbunov.diaries.domain.Note;
 
@@ -15,7 +14,7 @@ import java.util.Random;
  *
  * @author Gorbunov.ia
  */
-public class NoteToNoteDtoConverterTest {
+class NoteToNoteDtoConverterTest {
 
     /**
      * Error message.
@@ -31,39 +30,39 @@ public class NoteToNoteDtoConverterTest {
      * Test convert empty Note object.
      */
     @Test
-    public void testConvertEmptyObject() {
+    void testConvertEmptyObject() {
         NoteDto noteDto = converter.convert(new Note());
-        Assert.assertNotNull("NoteDto object is null, but Note not null.", noteDto);
+        Assertions.assertThat(noteDto).as("NoteDto object is null, but Note not null.").isNotNull();
     }
 
     /**
      * Test convert Note object with filled field.
      */
     @Test
-    public void testConvertFullObject() {
+    void testConvertFullObject() {
         final Integer noteId = new Random().nextInt();
         final Note note = getTestNote(noteId);
         final NoteDto noteDto = converter.convert(note);
 
-        Assert.assertEquals(CONVERT_ERR_MSG, noteId, noteDto.getId());
-        Assert.assertEquals(CONVERT_ERR_MSG, "unitTestNote", noteDto.getDescription());
-        Assert.assertEquals(CONVERT_ERR_MSG, Integer.valueOf(1), noteDto.getSortBy());
-        Assert.assertEquals(CONVERT_ERR_MSG, Date.from(Instant.EPOCH), noteDto.getLastModified());
+        Assertions.assertThat(noteDto.getId()).as(CONVERT_ERR_MSG).isEqualTo(noteId);
+        Assertions.assertThat(noteDto.getDescription()).as(CONVERT_ERR_MSG).isEqualTo("unitTestNote");
+        Assertions.assertThat(noteDto.getSortBy()).as(CONVERT_ERR_MSG).isEqualTo(Integer.valueOf(1));
+        Assertions.assertThat(noteDto.getLastModified()).as(CONVERT_ERR_MSG).isEqualTo(Date.from(Instant.EPOCH));
     }
 
     /**
      * Test convert null Note object.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConvertNullSource() {
-        converter.convert(null);
+    @Test
+    void testConvertNullSource() {
+        Assertions.assertThatIllegalArgumentException().isThrownBy(() -> converter.convert(null));
     }
 
     /**
      * Help method for creating test note object.
      *
-     * @param noteId    note id
-     * @return          note object
+     * @param noteId note id
+     * @return note object
      */
     private Note getTestNote(final Integer noteId) {
         Note note = new Note();
