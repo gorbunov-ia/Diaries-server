@@ -1,14 +1,14 @@
 package ru.gorbunov.diaries.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller for home page.
  *
  * @author Gorbunov.ia
  */
-@Controller
+@RestController
 public class HomeController {
 
     /**
@@ -16,9 +16,9 @@ public class HomeController {
      *
      * @return home page
      */
-    @GetMapping(value = {"/{path:[^\\.]*}", "/{path:[^\\.]*}/{path:[^\\.]*}"})
+    @GetMapping
     public String redirect() {
-        return "forward:/";
+        return "Welcome to Diaries application";
     }
 
 }
