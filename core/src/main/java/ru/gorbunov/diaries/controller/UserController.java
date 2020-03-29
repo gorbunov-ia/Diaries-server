@@ -2,10 +2,9 @@ package ru.gorbunov.diaries.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import ru.gorbunov.diaries.controller.dto.UserDto;
 import ru.gorbunov.diaries.service.UserService;
 
@@ -39,7 +38,7 @@ public class UserController {
      *
      * @return template name
      */
-    @GetMapping(path = "")
+    @PostMapping(path = "/login")
     public ResponseEntity<UserDto> getCurrentUser() {
         Optional<UserDto> user = userService.getUser();
         return user.map(dto -> new ResponseEntity<>(dto, HttpStatus.OK))
