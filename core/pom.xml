@@ -37,11 +37,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!-- Template engine -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
         <dependency>
           <groupId>org.springframework.session</groupId>
           <artifactId>spring-session-jdbc</artifactId>
@@ -123,12 +118,6 @@
         </profile>
         <profile>
             <id>prod</id>
-            <activation>
-                <!-- Heroku detect-->
-                <property>
-                    <name>env.DYNO</name>
-                </property>
-            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.postgresql</groupId>
