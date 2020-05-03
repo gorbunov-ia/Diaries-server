@@ -128,6 +128,18 @@
                 <springActiveProfile>prod</springActiveProfile>
             </properties>
         </profile>
+        <profile>
+            <id>openshift</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </dependency>
+            </dependencies>
+            <properties>
+                <springActiveProfile>prod</springActiveProfile>
+            </properties>
+        </profile>
     </profiles>
 
 </project>
