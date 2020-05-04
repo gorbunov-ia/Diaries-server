@@ -1,8 +1,7 @@
 package ru.gorbunov.diaries.converters;
 
+import org.mapstruct.Mapper;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
-
 import ru.gorbunov.diaries.controller.dto.UserDto;
 import ru.gorbunov.diaries.domain.User;
 
@@ -11,20 +10,10 @@ import ru.gorbunov.diaries.domain.User;
  *
  * @author Gorbunov.ia
  */
-@Component
-public class UserToUserDtoConverter implements Converter<User, UserDto> {
+@Mapper(config = DefaultConfig.class)
+public interface UserToUserDtoConverter extends Converter<User, UserDto> {
 
     @Override
-    public UserDto convert(User source) {
-        if (source == null) {
-            throw new IllegalArgumentException("The source argument must to be NOT null.");
-        }
-        final UserDto target = new UserDto();
-        target.setId(source.getId());
-        target.setLogin(source.getLogin());
-        target.setEmail(source.getEmail());
-        target.setActive(source.getIsActive());
-        return target;
-    }
+    UserDto convert(User source);
 
 }

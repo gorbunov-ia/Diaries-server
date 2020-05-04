@@ -57,7 +57,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
         Optional<User> userFromDatabase = userInternalService.getUserByLogin(lowercaseLogin);
         return userFromDatabase.map(user -> {
-            if (!user.getIsActive()) {
+            if (!user.getActive()) {
                 throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
             }
             List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()

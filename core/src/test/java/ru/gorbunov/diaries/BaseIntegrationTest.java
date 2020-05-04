@@ -14,7 +14,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = {BaseIntegrationTest.Initializer.class})
-class BaseIntegrationTest {
+public class BaseIntegrationTest {
 
     /**
      * Shared test container.

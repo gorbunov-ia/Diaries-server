@@ -2,6 +2,9 @@ package ru.gorbunov.diaries.converters;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import ru.gorbunov.diaries.BaseIntegrationTest;
 import ru.gorbunov.diaries.controller.dto.UserDto;
 import ru.gorbunov.diaries.domain.User;
 
@@ -12,7 +15,7 @@ import java.util.Random;
  *
  * @author Gorbunov.ia
  */
-class UserToUserDtoConverterTest {
+class UserToUserDtoConverterTest extends BaseIntegrationTest {
 
     /**
      * Error message.
@@ -22,14 +25,14 @@ class UserToUserDtoConverterTest {
     /**
      * Converter instance.
      */
-    private final UserToUserDtoConverter converter = new UserToUserDtoConverter();
+    private ConversionService conversionService;
 
     /**
      * Test convert empty User object.
      */
     @Test
     void testConvertEmptyObject() {
-        UserDto userDto = converter.convert(new User());
+        UserDto userDto = convert(new User());
         Assertions.assertThat(userDto).as("UserDto object is null, but User not null.").isNotNull();
     }
 
@@ -40,7 +43,7 @@ class UserToUserDtoConverterTest {
     void testConvertFullObject() {
         final Integer userId = new Random().nextInt();
         final User user = getTestUser(userId);
-        final UserDto userDto = converter.convert(user);
+        final UserDto userDto = convert(user);
 
         Assertions.assertThat(userDto.getId()).as(CONVERT_ERR_MSG).isEqualTo(userId);
         Assertions.assertThat(userDto.getLogin()).as(CONVERT_ERR_MSG).isEqualTo("unitTest");
@@ -53,7 +56,7 @@ class UserToUserDtoConverterTest {
      */
     @Test
     void testConvertNullSource() {
-        Assertions.assertThatIllegalArgumentException().isThrownBy(() -> converter.convert(null));
+        Assertions.assertThat(convert(null)).isNull();
     }
 
     /**
@@ -67,7 +70,16 @@ class UserToUserDtoConverterTest {
         user.setId(userId);
         user.setLogin("unitTest");
         user.setEmail("unit@test");
-        user.setIsActive(true);
+        user.setActive(true);
         return user;
+    }
+
+    private UserDto convert(User user) {
+        return conversionService.convert(user, UserDto.class);
+    }
+
+    @Autowired
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
     }
 }

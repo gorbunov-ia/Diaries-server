@@ -86,12 +86,12 @@ public class User extends GeneralEntity {
         this.email = email;
     }
 
-    public Boolean getIsActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public Set<Role> getRoles() {

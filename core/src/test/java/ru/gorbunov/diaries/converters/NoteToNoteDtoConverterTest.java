@@ -2,6 +2,9 @@ package ru.gorbunov.diaries.converters;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import ru.gorbunov.diaries.BaseIntegrationTest;
 import ru.gorbunov.diaries.controller.dto.NoteDto;
 import ru.gorbunov.diaries.domain.Note;
 
@@ -14,7 +17,7 @@ import java.util.Random;
  *
  * @author Gorbunov.ia
  */
-class NoteToNoteDtoConverterTest {
+class NoteToNoteDtoConverterTest extends BaseIntegrationTest {
 
     /**
      * Error message.
@@ -24,14 +27,14 @@ class NoteToNoteDtoConverterTest {
     /**
      * Converter instance.
      */
-    private final NoteToNoteDtoConverter converter = new NoteToNoteDtoConverter();
+    private ConversionService conversionService;
 
     /**
      * Test convert empty Note object.
      */
     @Test
     void testConvertEmptyObject() {
-        NoteDto noteDto = converter.convert(new Note());
+        NoteDto noteDto = convert(new Note());
         Assertions.assertThat(noteDto).as("NoteDto object is null, but Note not null.").isNotNull();
     }
 
@@ -42,7 +45,7 @@ class NoteToNoteDtoConverterTest {
     void testConvertFullObject() {
         final Integer noteId = new Random().nextInt();
         final Note note = getTestNote(noteId);
-        final NoteDto noteDto = converter.convert(note);
+        final NoteDto noteDto = convert(note);
 
         Assertions.assertThat(noteDto.getId()).as(CONVERT_ERR_MSG).isEqualTo(noteId);
         Assertions.assertThat(noteDto.getDescription()).as(CONVERT_ERR_MSG).isEqualTo("unitTestNote");
@@ -55,7 +58,7 @@ class NoteToNoteDtoConverterTest {
      */
     @Test
     void testConvertNullSource() {
-        Assertions.assertThatIllegalArgumentException().isThrownBy(() -> converter.convert(null));
+        Assertions.assertThat(convert(null)).isNull();
     }
 
     /**
@@ -73,4 +76,12 @@ class NoteToNoteDtoConverterTest {
         return note;
     }
 
+    private NoteDto convert(Note note) {
+        return conversionService.convert(note, NoteDto.class);
+    }
+
+    @Autowired
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
 }

@@ -2,6 +2,9 @@ package ru.gorbunov.diaries.converters;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import ru.gorbunov.diaries.BaseIntegrationTest;
 import ru.gorbunov.diaries.controller.dto.NoteElementDto;
 import ru.gorbunov.diaries.domain.NoteElement;
 
@@ -14,7 +17,7 @@ import java.util.Random;
  *
  * @author Gorbunov.ia
  */
-class NoteElementToNoteElementDtoConverterTest {
+class NoteElementToNoteElementDtoConverterTest extends BaseIntegrationTest {
 
     /**
      * Error message.
@@ -24,14 +27,14 @@ class NoteElementToNoteElementDtoConverterTest {
     /**
      * Converter instance.
      */
-    private final NoteElementToNoteElementDtoConverter converter = new NoteElementToNoteElementDtoConverter();
+    private ConversionService conversionService;
 
     /**
      * Test convert empty Note Element object.
      */
     @Test
     void testConvertEmptyObject() {
-        NoteElementDto noteElementDto = converter.convert(new NoteElement());
+        NoteElementDto noteElementDto = convert(new NoteElement());
         Assertions.assertThat(noteElementDto)
                 .as("NoteElementDto object is null, but NoteElement not null.")
                 .isNotNull();
@@ -44,7 +47,7 @@ class NoteElementToNoteElementDtoConverterTest {
     void testConvertFullObject() {
         final Integer noteElementId = new Random().nextInt();
         final NoteElement noteElement = getTestNoteElement(noteElementId);
-        final NoteElementDto noteElementDto = converter.convert(noteElement);
+        final NoteElementDto noteElementDto = convert(noteElement);
 
         Assertions.assertThat(noteElementDto.getId()).as(CONVERT_ERR_MSG).isEqualTo(noteElementId);
         Assertions.assertThat(noteElementDto.getDescription()).as(CONVERT_ERR_MSG).isEqualTo("unitTestNoteElement");
@@ -57,8 +60,7 @@ class NoteElementToNoteElementDtoConverterTest {
      */
     @Test
     void testConvertNullSource() {
-        Assertions.assertThatIllegalArgumentException()
-                .isThrownBy(() -> converter.convert(null));
+        Assertions.assertThat(convert(null)).isNull();
     }
 
     /**
@@ -76,4 +78,12 @@ class NoteElementToNoteElementDtoConverterTest {
         return noteElement;
     }
 
+    private NoteElementDto convert(NoteElement noteElement) {
+        return conversionService.convert(noteElement, NoteElementDto.class);
+    }
+
+    @Autowired
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
 }
