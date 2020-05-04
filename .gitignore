@@ -26,3 +26,5 @@ nbdist/
 ### Heroku ###
 *.env
 
+### Logging ###
+logs/
