@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -95,11 +96,20 @@ public class User extends GeneralEntity {
     }
 
     public Set<Role> getRoles() {
-        return roles;
+        return Collections.unmodifiableSet(roles);
+    }
+
+    /**
+     * Grant the role to the user.
+     *
+     * @param role new role
+     */
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
     public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+        this.roles = new HashSet<>(roles);
     }
 
     @Override

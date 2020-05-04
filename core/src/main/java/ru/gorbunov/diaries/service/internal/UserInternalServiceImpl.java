@@ -1,7 +1,6 @@
 package ru.gorbunov.diaries.service.internal;
 
 import org.springframework.stereotype.Service;
-
 import ru.gorbunov.diaries.domain.User;
 import ru.gorbunov.diaries.repository.UserRepository;
 import ru.gorbunov.diaries.security.SecurityUtils;
@@ -24,7 +23,7 @@ public class UserInternalServiceImpl implements UserInternalService {
     /**
      * Base constructor.
      *
-     * @param repository repository for crud operation with db
+     * @param repository repository for crud operations with db
      */
     public UserInternalServiceImpl(final UserRepository repository) {
         this.userRepository = repository;
