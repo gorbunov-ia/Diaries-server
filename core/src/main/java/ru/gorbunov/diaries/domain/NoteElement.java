@@ -8,7 +8,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import java.util.Date;
 import java.util.Objects;
 
@@ -18,16 +17,14 @@ import java.util.Objects;
  * @author Gorbunov.ia
  */
 @Entity
-@Table(name = "t_NotesElements", uniqueConstraints = {
-        @UniqueConstraint(name = "UIX_NoteElement_NoteID_SortBy", columnNames = {"NoteID", "SortBy"})
-})
+@Table(name = "t_note_element")
 public class NoteElement extends GeneralEntity implements Swappable {
 
     /**
      * Note.
      */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "NoteID", nullable = false)
+    @JoinColumn(name = "note_id", nullable = false)
     private Note note = null;
 
     /**
@@ -39,13 +36,13 @@ public class NoteElement extends GeneralEntity implements Swappable {
     /**
      * Sorting order.
      */
-    @Column(nullable = false)
+    @Column(name = "sort_by", nullable = false)
     private Integer sortBy = 0;
 
     /**
      * Date of Last Modified.
      */
-    @Column(name = "LastModified", nullable = false)
+    @Column(name = "last_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
 

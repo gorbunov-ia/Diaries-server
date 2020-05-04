@@ -18,14 +18,14 @@ import javax.persistence.TemporalType;
  * @author Gorbunov.ia
  */
 @Entity
-@Table(name = "t_Notes")
+@Table(name = "t_note")
 public class Note extends GeneralEntity {
 
     /**
      * Owner of a note.
      */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user = null;
 
     /**
@@ -37,13 +37,13 @@ public class Note extends GeneralEntity {
     /**
      * Sorting order.
      */
-    @Column(nullable = false)
+    @Column(name = "sort_by", nullable = false)
     private Integer sortBy = 0;
 
     /**
      * Date of Last Modified.
      */
-    @Column(name = "LastModified", nullable = false)
+    @Column(name = "last_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
 

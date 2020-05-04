@@ -1,28 +1,26 @@
 package ru.gorbunov.diaries.domain;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 
 /**
- * Role description.
+ * User description.
  *
  * @author Gorbunov.ia
  */
 @Entity
-@Table(name = "t_Users")
+@Table(name = "t_user")
 public class User extends GeneralEntity {
 
     /**
@@ -38,7 +36,7 @@ public class User extends GeneralEntity {
      */
     @NotNull
     @Size(min = 60, max = 60)
-    @Column(name = "Pswrd", nullable = false, length = 60)
+    @Column(nullable = false, length = 60)
     private String password;
 
     /**
@@ -52,16 +50,16 @@ public class User extends GeneralEntity {
     /**
      * Indicator of user activate.
      */
-    @Column(nullable = false)
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
     /**
      * Roles of user.
      */
     @ManyToMany
-    @JoinTable(name = "t_UsersRoles",
-        joinColumns = {@JoinColumn(name = "UserID", referencedColumnName = "ID")},
-        inverseJoinColumns = {@JoinColumn(name = "RoleID", referencedColumnName = "ID")})
+    @JoinTable(name = "t_user_role",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
 
     public String getLogin() {

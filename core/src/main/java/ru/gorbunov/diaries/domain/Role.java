@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
  * @author Gorbunov.ia
  */
 @Entity
-@Table(name = "t_Roles")
+@Table(name = "t_role")
 public class Role extends GeneralEntity {
 
     /**
