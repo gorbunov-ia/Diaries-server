@@ -21,7 +21,7 @@
         <java.version>1.8</java.version>
         <commons.lang.version>3.9</commons.lang.version>
         <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
-        <testcontainers.version>1.14.1</testcontainers.version>
+        <testcontainers.version>1.20.2</testcontainers.version>
 
         <compiler.plugin.version>3.8.1</compiler.plugin.version>
         <checkstyle.plugin.version>3.0.0</checkstyle.plugin.version>
