@@ -24,7 +24,7 @@
         <testcontainers.version>1.14.1</testcontainers.version>
 
         <compiler.plugin.version>3.8.1</compiler.plugin.version>
-        <checkstyle.plugin.version>3.0.0</checkstyle.plugin.version>
+        <checkstyle.plugin.version>3.5.0</checkstyle.plugin.version>
     </properties>
 
     <dependencies>
